@@ -15,5 +15,5 @@
         </p>
     </div>
     <button class="btn btn-primary btn-block" ng-disabled="loginForm.$invalid||_loading" ng-click="login()" ng-bind-html="loadingLabel('Entrar')"></button>
-    <a class="btn btn-link btn-block" href="#/cadastro" ng-click="$dismiss()">Não tenho cadastro.</a>
+    <a class="btn btn-link btn-block" ui-sref="cadastro" ng-click="$dismiss()">Não tenho cadastro.</a>
 </form>

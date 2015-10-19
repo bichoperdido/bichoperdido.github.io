@@ -270,14 +270,16 @@ angular.module('bichoApp.anuncio.detalhes', ['ui.router', 'bootstrapLightbox', '
             $scope._raca.model = $scope.breeds.filter(function(breed) {
                 return breed.id == $scope.dto.raca;
             })[0];
-            $scope.dto.peculiaridades = $scope.dto.peculiaridades.map(function(quirk) {
-                Object.keys(quirk).map(function(prop) {
-                    quirk[prop] = quirk[prop].toString();
+            if($scope.dto.peculiaridades) {
+                $scope.dto.peculiaridades = $scope.dto.peculiaridades.map(function(quirk) {
+                    Object.keys(quirk).map(function(prop) {
+                        quirk[prop] = quirk[prop].toString();
+                    });
+                    return quirk;
                 });
-                return quirk;
-            });
-            if(!$scope.dto.peculiaridades.length) {
-                $scope.dto.peculiaridades.push({});
+                if(!$scope.dto.peculiaridades.length) {
+                    $scope.dto.peculiaridades.push({});
+                }
             }
         }
    })

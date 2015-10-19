@@ -1,0 +1,19 @@
+<form name="loginForm" ng-controller="loginCtrl">
+    <div class="form-group" ng-class="{'has-error': hasError(loginForm.email)}">
+        <label>Endereço de <i>e-mail</i></label>
+        <input class="form-control" type="email" name="email" ng-model="dto.email" required>
+        <p class="help-block" ng-if="hasError(loginForm.email)" ng-messages="loginForm.email.$error">
+            <span ng-message="required">Campo deve ser preenchido.</span>
+            <span ng-message="email">Informe um endereço de <i>e-mail</i> válido.</span>
+        </p>
+    </div>
+    <div class="form-group" ng-class="{'has-error': hasError(loginForm.senha)}">
+        <label>Senha</label>
+        <input class="form-control" type="password" name="senha" ng-model="dto.senha" required>
+        <p class="help-block" ng-if="hasError(loginForm.senha)" ng-messages="loginForm.senha.$error">
+            <span ng-message="required">Campo deve ser preenchido.</span>
+        </p>
+    </div>
+    <button class="btn btn-primary btn-block" ng-disabled="loginForm.$invalid||_loading" ng-click="login()" ng-bind-html="loadingLabel('Entrar')"></button>
+    <a class="btn btn-link btn-block" href="#/cadastro" ng-click="$dismiss()">Não tenho cadastro.</a>
+</form>

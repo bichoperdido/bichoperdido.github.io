@@ -1,0 +1,204 @@
+<form name="anuncioForm" novalidate autocomplete="off">
+    
+    <div class="form-group" ng-class="{'has-error': !dto.natureza}">
+        <label>Natureza do anúncio</label>
+        <div class="btn-group btn-group-justified" ng-class="{'has-error': !dto.natureza}">
+            <label class="btn btn-default" ng-model="dto.natureza" uib-btn-radio="'perdido'">Animal perdido</label>
+            <label class="btn btn-default" ng-model="dto.natureza" uib-btn-radio="'encontrado'">Animal encontrado</label>
+        </div>
+        <p class="help-block" ng-if="!dto.natureza">Escolha um tipo de anúncio.</p>
+    </div>
+    
+    <div ng-if="dto.natureza" ng-init="dto.datahora=now(); localCurrent()">
+        
+        <div class="form-group" ng-init="coverInit()" ng-class="{'has-error': capaHasError()}">
+            <label>Foto de capa do anúncio</label>
+            <img id="coverPreview" class="img-responsive center-block">
+            <div class="btn-group btn-group-justified" ng-class="{'has-error': capaHasError()}">
+                <span class="btn btn-default btn-block btn-file" >Selecionar...<input type="file" id="coverFile" accept="image/jpeg" nv-file-select uploader="uploader"></span>
+            </div>
+            <p class="help-block" ng-if="capaHasError()">Selecione um arquivo de imagem.</p>
+        </div>
+
+        <div class="form-group" ng-class="{'has-error': hasError(anuncioForm.datahora)}">
+            <label>Data e hora da ocorrência</label>
+            <input class="form-control" type="datetime-local" name="datahora" ng-model="dto.datahora" required>
+            <p class="help-block" ng-if="hasError(anuncioForm.datahora)" ng-messages="anuncioForm.datahora.$error">
+                <span ng-message="required">Informe a data e a hora.</span>
+                <span ng-message="datetimelocal">Data e/ou hora inválidos.</span>
+            </p>
+        </div>
+        <!--
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" ng-model="$parent._noGps">
+                FLAG: ignore GPS information?
+            </label>
+        </div>
+        -->
+        <div class="form-group" ng-class="{'has-error': hasError(anuncioForm.local)}">
+            <label>Local da ocorrência <i class="fa fa-spinner fa-spin" ng-if="_local.loading"></i></label>
+            <div class="input-group">
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="button" ng-click="localCurrent()">
+                        <i class="fa fa-location-arrow"></i>
+                    </button>
+                </span>
+                <input class="form-control" name="local" ng-model="dto.local.endereco" required
+                    uib-typeahead="place as place.description for place in placesQuery($viewValue)"
+                    typeahead-editable="false"
+                    typeahead-wait-ms="1000"
+                    typeahead-loading="_local.loading"
+                    typeahead-on-select="localSelect($item)"
+                >
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="button" ng-click="localReset()">Limpar</button>
+                </span>
+            </div>
+            <p class="help-block" ng-if="hasError(anuncioForm.local)" ng-messages="anuncioForm.local.$error">
+                <span ng-message="required">Informe o local.</span>
+                <span ng-message="editable">Selecione um local da lista.</span>
+                <span ng-message="nolocation">Local selecionado não referencia coordenadas geográficas. Selecione outro.</span>
+            </p>
+        </div>
+
+        <div ng-if="anuncioForm.local.$valid">
+            <ui-gmap-google-map center="map.center" zoom="map.zoom" options="map.options" pan="true">
+                <ui-gmap-marker idKey="'local'" coords="marker.coords" options="marker.options" events="marker.events"></ui-gmap-marker>
+            </ui-gmap-google-map>
+            <br>
+        </div>
+        
+        <div class="form-group">
+            <label>Detalhes da ocorrência ("perdeu-se na rua", "fugiu de casa", etc.)</label>
+            <textarea class="form-control" ng-model="dto.detalhes"></textarea>
+        </div>
+        
+        <div class="form-group" ng-class="{'has-error': !dto.especie}">
+            <label>Espécie</label>
+            <div class="btn-group btn-group-justified" ng-class="{'has-error': !dto.especie}">
+                <label class="btn btn-default" ng-model="dto.especie" uib-btn-radio="'cachorro'">Cachorro</label>
+                <label class="btn btn-default" ng-model="dto.especie" uib-btn-radio="'gato'">Gato</label>
+            </div>
+            <p class="help-block" ng-if="!dto.especie">Escolha uma espécie.</p>
+        </div>
+        
+    </div>
+    
+    <div ng-if="dto.natureza && dto.especie">
+        
+        <div class="form-group" ng-class="{'has-error': generoHasError()}">
+            <label>Gênero</label>
+            <div class="btn-group btn-group-justified" ng-class="{'has-error': generoHasError()}">
+                <label class="btn btn-default" ng-model="dto.genero" uib-btn-radio="'macho'">Macho</label>
+                <label class="btn btn-default" ng-model="dto.genero" uib-btn-radio="'femea'">Fêmea</label>
+                <label class="btn btn-default" ng-model="dto.genero" uib-btn-radio="'naosei'" ng-if="dto.natureza == 'encontrado'">Não sei</label>
+            </div>
+            <p class="help-block" ng-if="generoHasError()">Escolha uma espécie.</p>
+        </div>
+        
+        <div class="checkbox" ng-if="dto.natureza=='encontrado'">
+            <label>
+                <input type="checkbox" ng-model="$parent._coleira">
+                Encontrado com nome na coleira?
+            </label>
+        </div>
+        
+        <div class="form-group" ng-class="{'has-error': hasError(anuncioForm.nome)}" ng-if="dto.natureza == 'encontrado' ? _coleira : true">
+            <label>Nome {{nomeLabel()}}</label>
+            <input class="form-control" name="nome" ng-model="dto.nome" required>
+            <p class="help-block" ng-if="hasError(anuncioForm.nome)" ng-messages="anuncioForm.nome.$error">
+                <span ng-message="required">Informe o nome {{nomeLabel()}}.</span>
+            </p>
+        </div>
+        
+        <div class="form-group" ng-init="dto.cores=['#000000']">
+            <label>Cores em ordem de predominância (até 3)</label>
+
+            <div class="form-group" ng-repeat="_ in dto.cores track by $index">
+
+                <label>{{$index + 1}}<sup>a</sup> cor <a href ng-click="_cores.remove($index)" ng-if="dto.cores.length > 1">Remover</a></label>
+
+                <input class="form-control" type="color" ng-model="dto.cores[$index]" ng-if="isInputColorSupported">
+                
+                <!--TODO two way binding-->
+                <div ng-if="!isInputColorSupported">
+                    <div class="input-group" ng-class="{'has-error': hasError(anuncioForm['cor' + $index])}">
+                        <input class="form-control" name="cor{{$index}}" ng-model="dto.cores[$index]" ng-style="{'background-color': dto.cores[$index]}" pattern="\#[0-f]{6}" required>
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="_cores.toggleActive($index)"><i class="fa fa-caret-{{_cores.isActive($index)?'up':'down'}}"></i></button>
+                        </span>
+                    </div>
+                    <div uib-collapse="!_cores.isActive($index)" ng-init="_cores.updateSliders($index)">
+                        <div class="form-group" ng-repeat="c in colorComponents">
+                            <label>{{c.label}} ({{_cores.sliders[$parent.$index][c.property]}})</label>
+                            <div ng-style="{'background': _cores.gradient(c.property, $parent.$index)}">
+                                <input type="range" min="0" max="255" value="0" ng-model="_cores.sliders[$parent.$index][c.property]" ng-change="_cores.updateModel($parent.$index)">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <button class="btn btn-link btn-block" type="button" ng-click="_cores.add()" ng-if="_cores.isNotFull()">Mais cores...</button>
+
+        </div>
+
+        <div class="form-group" ng-class="{'has-error': hasError(anuncioForm.raca)}">
+            <label>Raça</label>
+            <input class="form-control" name="raca" ng-model="_raca.model" required
+                uib-typeahead="breed as breed.nome for breed in breeds|filter:{especie: dto.especie.toUpperCase(), nome: $viewValue}"
+                typeahead-editable="false"
+                typeahead-on-select="dto.raca=_raca.model.id"
+            >
+        </div>
+        
+        <div class="form-group" ng-class="{'has-error': !dto.porte}" ng-if="dto.especie=='cachorro'">
+            <label>Porte</label>
+            <div class="btn-group btn-group-justified" ng-class="{'has-error': !dto.porte}">
+                <label class="btn btn-default" ng-model="dto.porte" uib-btn-radio="'pequeno'">Pequeno</label>
+                <label class="btn btn-default" ng-model="dto.porte" uib-btn-radio="'medio'">Médio</label>
+                <label class="btn btn-default" ng-model="dto.porte" uib-btn-radio="'grande'">Grande</label>
+            </div>
+            <p class="help-block" ng-if="!dto.porte">Escolha o porte do cachorro.</p>
+        </div>
+
+        <div class="form-group" ng-class="{'has-error': !dto.pelagem}">
+            <label>Pelagem</label>
+            <div class="btn-group btn-group-justified" ng-class="{'has-error': !dto.pelagem}">
+                <label class="btn btn-default" ng-model="dto.pelagem" uib-btn-radio="'curta'">Curta</label>
+                <label class="btn btn-default" ng-model="dto.pelagem" uib-btn-radio="'longa'">Longa</label>
+            </div>
+            <p class="help-block" ng-if="!dto.pelagem">Descreva o tamanho do pelo.</p>
+        </div>
+        
+        <div class="form-group" ng-init="dto.peculiaridades=[{}]">
+            <label>Peculiaridades</label>
+            <div class="form-group" ng-repeat="p in dto.peculiaridades" ng-class="{'has-error': anuncioForm['oQue' + $index].$invalid || anuncioForm['onde' + $index].$invalid}">
+                <label>{{$index+1}}ª peculiaridade <a href ng-click="_peculiaridades.remove($index)">Remover</a></label>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <select class="form-control" ng-model="p.oQue" ng-options="id as label for (id, label) in _peculiaridades.oQues" required name="oQue{{$index}}">
+                            <option value disabled selected>O quê?</option>
+                        </select>
+                    </div>
+                    <div class="col-xs-6">
+                        <select class="form-control" ng-model="p.onde" ng-options="id as label for (id, label) in _peculiaridades.ondes" required name="onde{{$index}}">
+                            <option value disabled selected>Onde?</option>
+                        </select>
+                    </div>
+                </div>
+                <p class="help-block" ng-if="anuncioForm['oQue' + $index].$invalid || anuncioForm['onde' + $index].$invalid">Defina a peculiaridade (o que e onde) ou remova-a.</p>
+            </div>
+        </div>
+        <button type="button" class="btn btn-link btn-block" ng-click="_peculiaridades.add()">Mais peculiaridades...</button>
+
+        <div class="form-group">
+            <label>Mais informações (comportamentos, adereços, etc.)</label>
+            <textarea class="form-control" ng-model="dto.outras"></textarea>
+        </div>
+        
+        <button class="btn btn-primary btn-block" ng-disabled="anuncioForm.$invalid || generoHasError() || capaHasError()" ng-click="post()" ng-bind-html="loadingLabel('Anunciar')"></button>
+    </div>
+</form>

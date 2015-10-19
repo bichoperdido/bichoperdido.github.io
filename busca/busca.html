@@ -1,0 +1,131 @@
+<uib-accordion>
+	<uib-accordion-group heading="Filtros de busca em comum (clique aqui)">
+		<form name="filtrosForm">
+		    <div class="form-group">
+		        <label>Filtrar por natureza</label>
+		        <div class="btn-group btn-group-justified">
+		            <label class="btn btn-default" ng-model="dto.natureza" uib-btn-radio="'perdido'">Perdidos</label>
+		            <label class="btn btn-default" ng-model="dto.natureza" uib-btn-radio="'encontrado'">Encontr.</label>
+		            <label class="btn btn-default" ng-model="dto.natureza" uib-btn-radio="undefined">Ambos</label>
+			    </div>
+		    </div>
+		    
+		    <div class="form-group">
+		    	<label>Filtrar por período (a partir de)</label>
+		    	<div class="input-group">
+		    		<input class="form-control" type="date" ng-model="dto.dataInicial" max="{{(dto.dataFinal||now())|date:'yyyy-MM-dd'}}">
+		    		<span class="input-group-btn">
+		    			<button type="button" class="btn btn-default" ng-click="dto.dataInicial=undefined">Limpar</button>
+					</span>
+				</div>
+		    </div>
+		
+		    <div class="form-group">
+		    	<label>Filtrar por período (até)</label>
+		    	<div class="input-group">
+		    		<input class="form-control" type="date" ng-model="dto.dataFinal" max="{{now()|date:'yyyy-MM-dd'}}" min="{{dto.dataInicial|date:'yyyy-MM-dd'}}">
+		    		<span class="input-group-btn">
+		    			<button type="button" class="btn btn-default" ng-click="dto.dataFinal=now()">Limpar</button>
+					</span>
+				</div>
+		    </div>
+
+		    <div class="form-group">
+		        <label>Filtrar por espécie</label>
+		        <div class="btn-group btn-group-justified">
+		            <label class="btn btn-default" ng-model="dto.especie" uib-btn-radio="'cachorro'">Cães</label>
+		            <label class="btn btn-default" ng-model="dto.especie" uib-btn-radio="'gato'">Gatos</label>
+		            <label class="btn btn-default" ng-model="dto.especie" uib-btn-radio="undefined">Ambos</label>
+			    </div>
+		    </div>
+		    
+		    <div class="form-group">
+		    	<label>Filtrar por gênero</label>
+		        <div class="btn-group btn-group-justified">
+		            <label class="btn btn-default" ng-model="dto.genero" uib-btn-radio="'macho'">Macho</label>
+		            <label class="btn btn-default" ng-model="dto.genero" uib-btn-radio="'femea'">Fêmea</label>
+		            <label class="btn btn-default" ng-model="dto.genero" uib-btn-radio="undefined">Ambos</label>
+			    </div>
+		    </div>
+	    </form>
+	</uib-accordion-group>
+</uib-accordion>
+
+<uib-tabset type="tabs">
+
+	<uib-tab heading="Mapa">
+		<uib-accordion>
+			<uib-accordion-group heading="Legenda do mapa (clique aqui)">
+				<span ng-repeat="n in ['encontrado', 'perdido']">
+					<span ng-repeat="e in ['cachorro', 'gato']">
+						<dl ng-repeat="genero in (n == 'encontrado') ? ['naosei', 'femea', 'macho'] : ['femea', 'macho']" class="dl-horizontal">
+							<dt><img ng-src="markers/{{n}}_{{e}}_{{genero}}.png"></dt>
+							<dd>Animal <b>{{n}}</b> da espécie <b>{{e}}</b> e gênero <b>{{genero|genero}}</b>.</dd>
+						</dl>
+					</span>
+				</span>
+				<dl class="dl-horizontal">
+					<dt><img src="markers/cluster.png"></dt>
+					<dd>Agrupamento de marcadores (clicar/tocar para expandir).</dd>
+				</dl>
+			</uib-accordion-group>
+		</uib-accordion>
+		<div class="form-group">
+			<label>Busca por local</label>
+			<div class="input-group">
+				<span id="searchbox"></span>
+				<span class="input-group-btn">
+					<button class="btn btn-default" ng-click="current()" type="button">
+						<i class="fa fa-location-arrow"></i>
+					</button>
+				</span>
+			</div>
+		</div>
+		<ui-gmap-google-map center="map.center" zoom="map.zoom" options="map.options" pan="true" events="map.events">
+			<ui-gmap-search-box template="search.template" events="search.events" parentdiv="'searchbox'"></ui-gmap-search-box>
+			<!--ui-gmap-marker idkey="'current'" coords="map.current"></ui-gmap-marker-->
+			<ui-gmap-markers models="markers" coords="'self'" icon="'icon'" type="'cluster'" click="click">
+				<ui-gmap-windows show="show">
+					<div ng-non-bindable class="gm-style gm-style-iw gm-iw gm-sm">
+						<div class="gm-title">{{nome ? nome : 'Nome desconhecido'}}</div>
+						<div class="gm-basicinfo">
+							{{especie|capitalize}} {{genero|genero}} {{natureza}}.
+							<div class="gm-website"><a href="#/anuncio/{{id}}">Ver detalhes</a></div>
+						</div>
+						<div class="gm-photos"></div><img src="{{miniatura}}" style="max-width: 180px"></div>
+					</div>
+				</ui-gmap-windows>
+			</ui-gmap-markers>
+		</ui-gmap-google-map>
+	</uib-tab>
+
+	<uib-tab heading="Lista"><br>
+		<form>
+			<div class="form-group">
+				<label>Filtrar por palavras-chave</label>
+				<tags-input ng-model="models.keywords" add-on-space="true" min-length="1" placeholder="Palavra-chave"></tags-input>
+				<!--input class="form-control" placeholder="Nenhuma." ng-model="dto.keywords" bp-keywords-->
+				<p class="help-text">Ex. Porto Alegre, fugiu, Totó, Poodle, Simpático, etc.</p>
+			</div>
+			<button type="submit" class="btn btn-primary" ng-click="updateResults()" ng-bind-html="loadingLabel('Buscar')" ng-disabled="_loading"></button>
+		</form>
+		<div ng-if="results" ng-hide="_loading">
+			<uib-pagination ng-model="dto.paginaNumero" total-items="_totalResults" items-per-page="dto.paginaTamanho" max-size="5" ng-change="pageChanged()" previous-text="<" next-text=">" boundary-links="true" first-text="|<" last-text=">|"></uib-pagination>
+			<div class="list-group">
+				<div class="list-group-item" ng-if="!results.length">Nenhum resultado.</div>
+				<a ui-sref="detalhesAnuncio({id: r.id})" class="list-group-item" ng-repeat="r in results">
+					<div class="row">
+						<div class="col-sm-5 col-md-3 col-lg-2">
+							<img class="img-responsive" ng-src="{{r.miniatura}}" onerror="this.src='bp.png'">
+						</div>
+						<div class="col-sm-7 col-md-9 col-lg-10">
+							<h4 class="list-group-item-heading">{{r.nome || 'Nome desconhecido'}}</h4>
+							<p class="list-group-item-text">{{r.especie|capitalize}} {{r.genero|genero}} {{r.natureza}} em {{r.datahora|date:'short'}}, {{r.endereco}}.</p>
+						</div>
+					</div>
+				</a>
+			</div>
+			<uib-pagination ng-model="dto.paginaNumero" total-items="_totalResults" items-per-page="dto.paginaTamanho" max-size="5" ng-change="pageChanged()" previous-text="<" next-text=">" boundary-links="true" first-text="|<" last-text=">|"></uib-pagination>
+		</div>
+	</uib-tab>
+</uib-tabset>

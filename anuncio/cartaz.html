@@ -1,0 +1,87 @@
+<style>
+@media print {
+	body {
+		padding: 0;
+	}
+}
+img {
+	width: 70%;
+}
+h1, p {
+	font-family: sans-serif;
+}
+h1.titulo {
+	font-size: 50px;
+	font-weight: bold;
+	text-transform: uppercase;
+}
+h1.nome {
+	text-transform: uppercase;
+	font-size: 48px;
+}
+p.descricao {
+	font-size: 20px;
+}
+table.contato td {
+	font-size: 16px;
+}
+</style>
+<center>
+
+	<div class="btn-group">
+		<button type="button" class="btn btn-default hidden-print" ui-sref="detalhesAnuncio({id: $stateParams.id})"><i class="fa fa-chevron-left"></i> Detalhes</button>
+		<button type="button" class="btn btn-primary hidden-print" ng-click="imprimir()"><i class="fa fa-print"></i> Imprimir</button>
+	</div>
+
+	<h1 class="titulo">{{anuncio.especie|especie:anuncio.genero}} {{anuncio.natureza|natureza:anuncio.genero}}</h1>
+
+	<img ng-src="{{capa()}}">
+
+	<h1 class="nome" ng-if="anuncio.nome">&ldquo;{{anuncio.nome}}&rdquo;</h1>
+
+	<p class="descricao">
+		{{anuncio.especie|especie:anuncio.genero|capitalize}}
+		{{anuncio.natureza|natureza:anuncio.genero}},
+		da raça <b>{{anuncio.raca}}</b>,
+		cor<span ng-if="anuncio.cores.length > 1">es</span> <b ng-bind-html="anuncio.cores|cores|lowercase"></b>,
+		<span ng-if="anuncio.especie='cachorro'">porte <b>{{anuncio.porte|porte}}</b></span>,
+		pelagem <b>{{anuncio.pelagem}}</b>.
+		<span ng-if="anuncio.peculiaridades.length">Possui <b>{{anuncio.peculiaridades|peculiaridades|lowercase}}</b>.</span>
+	</p>
+	
+	<p class="descricao">
+		{{anuncio.natureza|natureza:anuncio.genero|capitalize}}
+		em <b>{{anuncio.datahora|date:'shortDate'}}</b>
+		no(a) <b>{{anuncio.local.endereco}}</b>.
+	</p>
+	
+	<p class="descricao" ng-if="anuncio.outras">Informações adicionais:<br>{{anuncio.outras}}</p>
+	
+	<p class="descricao" ng-class="{'hidden-print': !recompensa}" ng-if="anuncio.meu">
+		<input type="checkbox" ng-model="recompensa" class="hidden-print">
+		<b>Gratifica-se com recompensa</b>.
+	</p>
+
+	<table class="contato table table-condensed">
+		<tbody>
+			<tr>
+				<td><i class="fa fa-user"></i></td>
+				<td>{{anuncio.usuario|uppercase}}</td>
+			</tr>
+			<tr>
+				<td><i class="fa fa-envelope-o"></i></td>
+				<td>{{anuncio.email|lowercase}}</td>
+			</tr>
+			<tr>
+				<td><i class="fa fa-phone"></i></td>
+				<td>{{anuncio.telefone|tel}}</td>
+			</tr>
+			<tr>
+				<td><i class="fa fa-globe"></i></td>
+				<td>{{$location.absUrl().split('/cartaz')[0]}}</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<button type="button" class="btn btn-primary hidden-print" ng-click="imprimir()"><i class="fa fa-print"></i> Imprimir</button>
+</center>

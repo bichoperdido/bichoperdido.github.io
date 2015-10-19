@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+	</head>
+	<body>
+		<button id="test">Testar</button>
+		<audio id="bark" preload="auto">
+			<source src="assets/bark.mp3" type="audio/mpeg">
+		</audio>
+		<script>
+			var bark = document.querySelector('#bark');
+			window.Notification.requestPermission();
+			navigator.serviceWorker.register('handle-notifications.js')
+				.then(navigator.serviceWorker.ready)
+					.then(function(registration) {
+						navigator.serviceWorker.addEventListener('message', function(e) {
+							switch(e.data) {
+								case 'playBark':
+									bark.play();
+									break;
+							}
+						});
+						document.querySelector('#test').addEventListener('click', function() {
+							navigator.serviceWorker.controller.postMessage('hello fodase');
+						});
+					});
+		</script>
+	</body>
+</html>

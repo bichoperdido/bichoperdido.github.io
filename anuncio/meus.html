@@ -1,0 +1,35 @@
+<uib-tabset type="pills">
+	<uib-tab heading="Em aberto">
+		<br>
+		<div class="col-xs-12 col-sm-4 col-md-3" ng-repeat="a in emAberto">
+			<div class="thumbnail">
+				<img ng-src="{{serviceBaseUrl + a.miniatura}}" onerror="this.src='bp.png'">
+				<div class="caption">
+					<h3>{{a.nome||'Sem nome'}}</h3>
+					<p>{{a.natureza|lowercase|capitalize}} em {{a.datahora|date:'shortDate'}} às {{a.datahora|date:'shortTime'}} em {{a.endereco}}.</p>
+					<div class="btn-group-vertical btn-block">
+						<button type="button" class="btn btn-primary" ui-sref="detalhesAnuncio({id:a.id})"><i class="fa fa-eye"></i> Visualizar</button>
+						<button type="button" class="btn btn-warning" ui-sref="editarAnuncio({id:a.id})"><i class="fa fa-pencil-square-o"></i> Editar</button>
+						<button type="button" class="btn btn-success" ng-click="solve(a.id)"><i class="fa fa-thumbs-o-up"></i> Resolvido</button>
+						<button type="button" class="btn btn-danger" ng-click="remove(a.id)"><i class="fa fa-trash-o"></i> Remover</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</uib-tab>
+	<uib-tab heading="Resolvidos">
+		<br>
+		<div class="row" ng-repeat="rows in resolvidos|groupBy:4">
+			<div class="col-xs-12 col-sm-4 col-md-3" ng-repeat="a in rows">
+				<div class="thumbnail">
+					<img ng-src="{{serviceBaseUrl + a.miniatura}}" onerror="this.src='bp.png'">
+					<div class="caption">
+						<h3>{{a.nome||'Sem nome'}}</h3>
+						<p>{{a.natureza|lowercase|capitalize}} em {{a.datahora|date:'shortDate'}} às {{a.datahora|date:'shortTime'}} em {{a.endereco}}.</p>
+						<p>Resolvido em {{a.datahora|date:'shortDate'}}.</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</uib-tab>
+</uib-tabset>

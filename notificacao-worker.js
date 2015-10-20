@@ -20,17 +20,29 @@ function especieFlexionada(especie, genero) {
 	}
 }
 
+function naturezaFlexionada(natureza, genero) {
+	return natureza.slice(0, -1) + (genero=='femea'?'a':'o');
+}
+
 var messages = {
 	protetor: function(natureza, especie, genero) {
 		return '' +
-			'Um' + (genero=='femea'?'a':'') +					// Um/Uma
+			'Um' + (genero=='femea'?'a':'') +		// Um/Uma
 			' ' +
-			especieFlexionada(especie, genero) +				// cachorro/cadela/gato/gata
+			especieFlexionada(especie, genero) +	// cachorro/cadela/gato/gata
 			' foi ' +
-			natureza.slice(0, -1) + (genero=='femea'?'a':'o') +	// perdido/perdida/encontrado/encontrada
+			naturezaFlexionada(natureza, genero) +	// perdido/perdida/encontrado/encontrada
 			' na sua área de proteção.';
 	},
-	semelhante: null
+	semelhante: function(natureza, especie, genero, semelhanca) {
+		return 'Foi ' +
+			naturezaFlexionada(natureza, genero) +
+			' um' + (genero=='femea'?'a':'') + ' ' +
+			especieFlexionada(especie, genero) + ' ' +
+			Math.floor(semelhanca * 100) +
+			'% semelhante ' +
+			(genero=='femea'?'à sua':'ao seu') + '.';
+	}
 };
 
 function postMessage(object) {
@@ -67,6 +79,8 @@ function connect(serviceBaseUrl, token) {
 				message = messages.protetor(data.natureza, data.especie, data.genero);
 				break;
 			case 'semelhante':
+				message = messages.semelhante(data.natureza, data.especie, data.genero, data.semelhanca);
+				break;
 		}
 		notifyWithAudio(message, data.id, data.especie, data.miniatura);
 	};

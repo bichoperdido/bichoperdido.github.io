@@ -3,13 +3,18 @@
 	<div class="form-group">
 		<label>Tipo</label>
 		<select ng-model="dto.tipo" class="form-control" required name="tipo">
-			<option value="protetor">Protetor</option>
+			<option ng-repeat="tipo in ['protetor', 'semelhante']" value="{{tipo}}">{{tipo|capitalize}}</option>
 		</select>
+	</div>
+	
+	<div class="form-group" ng-if="dto.tipo=='semelhante'">
+		<label>Semelhança</label>
+		<input type="number" ng-model="dto.semelhanca" class="form-control" required name="semelhanca" min="0" max="100">
 	</div>
 	
 	<div class="form-group">
 		<label>ID do anúncio</label>
-		<input type="number" ng-model="dto.id" class="form-control" required name="id">
+		<input type="number" ng-model="dto.id" class="form-control" required name="id" min="1">
 	</div>
 	
 	<div class="form-group">

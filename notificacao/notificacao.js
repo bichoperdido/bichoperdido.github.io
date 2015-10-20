@@ -27,14 +27,18 @@ angular.module('bichoApp.notificacao', ['ui.router'])
 			id: 1,
 			natureza: 'perdido',
 			especie: 'cachorro',
-			genero: 'macho'
+			genero: 'macho',
+			semelhanca: 50
 		};
 		$scope.submit = function() {
+			var semelhanca = $scope.dto.semelhanca;
+			$scope.dto.semelhanca = semelhanca / 100;
 			if($scope.local) {
 				NotificationService.postMessage(JSON.stringify($scope.dto));
 			} else {
 				$http.get(serviceBaseUrl + '/public/user/notify/all/' + JSON.stringify($scope.dto));
 			}
+			$scope.dto.semelhanca = semelhanca;
 		};
 	})
 

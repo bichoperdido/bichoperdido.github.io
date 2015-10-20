@@ -21,8 +21,9 @@ angular.module('bichoApp', [
     'bichoApp.anuncio.cartaz',
     'bichoApp.busca',
     'bichoApp.protetor',
-    'bichoApp.restClient'
-    ])
+    'bichoApp.restClient',
+    'bichoApp.notificacao'
+])
     
     .run(function($window, TokenService) {
         
@@ -119,7 +120,7 @@ angular.module('bichoApp', [
         });
     })
 
-    .controller('mainCtrl', function($scope, $rootScope, $filter, $state, LoginWindow, serviceBaseUrl, $http, TokenService, $timeout) {
+    .controller('mainCtrl', function($scope, $rootScope, $filter, $state, LoginWindow, serviceBaseUrl, $http, TokenService, NotificationService) {
         
         /**
          * Botões com indicação de carregamento. _loading modificado nos interceptors.
@@ -207,7 +208,6 @@ angular.module('bichoApp', [
         $scope.login = function() {
             return LoginWindow.open().then(function() {
                 TokenService.validate().then(function() {
-                    //delete $state.current.template;
                     $state.reload();
                 });
             });
@@ -218,6 +218,8 @@ angular.module('bichoApp', [
         };
         
         $scope.logout = function() {
+            $http.get(serviceBaseUrl + '/private/logout');
+            NotificationService.logout();
             sessionStorage.removeItem('token');
             delete $rootScope.currentUser;
             $state.reload();
@@ -234,11 +236,12 @@ angular.module('bichoApp', [
         };
     })
     
-    .service('TokenService', function($http, serviceBaseUrl, $rootScope, $resource) {
+    .service('TokenService', function($http, serviceBaseUrl, $rootScope, $resource, NotificationService) {
         this.validate = function() {
             return $resource(serviceBaseUrl + '/private/login/who').get(null, function(data) {
                 if(data.bpError != 2) {
                     $rootScope.currentUser = data.name.split(' ')[0];
+                    NotificationService.login();
                 }
             }).$promise;
         };

@@ -137,6 +137,7 @@
                             <ul class="dropdown-menu">
                                 <li ng-class="{'active': isActive('/rest')}"><a ui-sref="rest">Cliente REST</a></li>
                                 <li><a href ng-click="changeBaseUrl()">Mudar URL</a></li>
+                                <li ng-class="{'active': isActive('/notify')}"><a ui-sref="notify">Notificações</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -162,5 +163,6 @@
         <script src="busca/busca.js"></script>
         <script src="protetor/protetor.js"></script>
         <script src="restClient/restClient.js"></script>
+        <script src="notificacao/notificacao.js"></script>
     </body>
 </html>

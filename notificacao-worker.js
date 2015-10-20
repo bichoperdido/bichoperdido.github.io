@@ -2,7 +2,7 @@
 
 var NOTIFICATION_TITLE = 'Bicho Perdido';
 var NOTIFICATION_DEFAULTICON = 'apple-icon.png';
-var ANUNCIO_BASEURL = '/#/anuncio/'; 
+var ANUNCIO_BASEURL = '/#/anuncio/';
 
 function especieFlexionada(especie, genero) {
 	switch(especie) {

@@ -82,7 +82,7 @@ function connect(serviceBaseUrl, token) {
 				message = messages.semelhante(data.natureza, data.especie, data.genero, data.semelhanca);
 				break;
 		}
-		notifyWithAudio(message, data.id, data.especie, serviceBaseUrl + data.miniatura);
+		notifyWithAudio(message, data.id, data.especie, (data.miniatura ? serviceBaseUrl + data.miniatura : null));
 	};
 }
 

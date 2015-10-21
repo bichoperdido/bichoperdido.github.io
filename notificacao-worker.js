@@ -70,7 +70,7 @@ var eventSource;
 
 var serviceBaseUrl;
 
-function onmessage(event) {
+function onMessage(event) {
 	var data = JSON.parse(event.data);
 	postMessage({action: 'log', data: data});
 	var message;
@@ -88,7 +88,7 @@ function onmessage(event) {
 function connect(serviceBaseUrl, token) {
 	serviceBaseUrl = serviceBaseUrl;
 	eventSource = new EventSource(serviceBaseUrl + '/public/user/notify/' + token);
-	eventSource.onmessage = onmessage;
+	eventSource.onmessage = onMessage;
 }
 
 function disconnect() {
@@ -111,6 +111,6 @@ self.onmessage = function(e) {
 			disconnect();
 			break;
 		default:
-			onmessage(e);
+			onMessage(e);
 	}
 };

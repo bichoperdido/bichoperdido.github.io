@@ -68,22 +68,27 @@ function notifyWithAudio(message, anuncioId, audioId, imageUrl) {
 
 var eventSource;
 
+var serviceBaseUrl;
+
+function onmessage(event) {
+	var data = JSON.parse(event.data);
+	postMessage({action: 'log', data: data});
+	var message;
+	switch(data.tipo) {
+		case 'protetor':
+			message = messages.protetor(data.natureza, data.especie, data.genero);
+			break;
+		case 'semelhante':
+			message = messages.semelhante(data.natureza, data.especie, data.genero, data.semelhanca);
+			break;
+	}
+	notifyWithAudio(message, data.id, data.especie, (data.miniatura ? serviceBaseUrl + data.miniatura : null));
+}
+
 function connect(serviceBaseUrl, token) {
+	serviceBaseUrl = serviceBaseUrl;
 	eventSource = new EventSource(serviceBaseUrl + '/public/user/notify/' + token);
-	eventSource.onmessage = function(e) {
-		var data = JSON.parse(e.data);
-		postMessage({action: 'log', data: data});
-		var message;
-		switch(data.tipo) {
-			case 'protetor':
-				message = messages.protetor(data.natureza, data.especie, data.genero);
-				break;
-			case 'semelhante':
-				message = messages.semelhante(data.natureza, data.especie, data.genero, data.semelhanca);
-				break;
-		}
-		notifyWithAudio(message, data.id, data.especie, (data.miniatura ? serviceBaseUrl + data.miniatura : null));
-	};
+	eventSource.onmessage = onmessage;
 }
 
 function disconnect() {
@@ -100,13 +105,12 @@ self.onmessage = function(e) {
 	var data = JSON.parse(e.data);
 	switch(data.action) {
 		case 'login':
-			console.log('logou');
 			connect(data.serviceBaseUrl, data.token);
 			break;
 		case 'logout':
 			disconnect();
 			break;
 		default:
-			eventSource.onmessage(e);
+			onmessage(e);
 	}
 };

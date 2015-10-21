@@ -18,7 +18,7 @@ angular.module('bichoApp.cadastro', ['ui.router'])
         };
     })
 
-    .controller('cadastroCtrl', function($scope, UserService, LoginService, $state) {
+    .controller('cadastroCtrl', function($scope, UserService, LoginService, $state, TokenService) {
         $scope.register = function() {
             UserService.create($scope.dto).then(function(response) {
                 if(response.id) {
@@ -27,7 +27,9 @@ angular.module('bichoApp.cadastro', ['ui.router'])
                         msg: 'Usuário criado com sucesso!'
                     });
                     LoginService.login({email: $scope.dto.email, senha: $scope.dto.senha}).then(function() {
-                        $state.go('novoAnuncio');
+                        TokenService.validate().then(function() {
+                            $state.go('novoAnuncio');
+                        });
                     });
                 }
             });

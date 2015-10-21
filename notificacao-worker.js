@@ -82,7 +82,7 @@ function connect(serviceBaseUrl, token) {
 				message = messages.semelhante(data.natureza, data.especie, data.genero, data.semelhanca);
 				break;
 		}
-		notifyWithAudio(message, data.id, data.especie, data.miniatura);
+		notifyWithAudio(message, data.id, data.especie, serviceBaseUrl + data.miniatura);
 	};
 }
 
@@ -100,10 +100,12 @@ self.onmessage = function(e) {
 	var data = JSON.parse(e.data);
 	switch(data.action) {
 		case 'login':
+			console.log('logou');
 			connect(data.serviceBaseUrl, data.token);
 			break;
 		case 'logout':
 			disconnect();
+			break;
 		default:
 			eventSource.onmessage(e);
 	}

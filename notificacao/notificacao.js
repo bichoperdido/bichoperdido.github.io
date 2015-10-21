@@ -28,7 +28,8 @@ angular.module('bichoApp.notificacao', ['ui.router'])
 			natureza: 'perdido',
 			especie: 'cachorro',
 			genero: 'macho',
-			semelhanca: 50
+			semelhanca: 50,
+			miniatura: '/public/media/image/thumb/3ac2d22b-799b-40b2-b275-4c99fc530140.jpg'
 		};
 		$scope.submit = function() {
 			var semelhanca = $scope.dto.semelhanca;

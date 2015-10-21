@@ -241,8 +241,8 @@ angular.module('bichoApp', [
             return $resource(serviceBaseUrl + '/private/login/who').get(null, function(data) {
                 if(data.bpError != 2) {
                     $rootScope.currentUser = data.name.split(' ')[0];
-                    NotificationService.login();
                 }
+                NotificationService.login();
             }).$promise;
         };
     })

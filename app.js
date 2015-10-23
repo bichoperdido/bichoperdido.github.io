@@ -77,7 +77,7 @@ angular.module('bichoApp', [
                     if(token) {
                         config.headers['x-token'] = token;
                     }
-                    config.timeout = 20000;
+                    config.timeout = 30000;
                     return config;
                 },
                 response: function(response) {

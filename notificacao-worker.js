@@ -70,6 +70,8 @@ var eventSource;
 
 var serviceBaseUrl;
 
+var activeToken;
+
 function onMessage(event) {
 	var data = JSON.parse(event.data);
 	postMessage({action: 'log', data: data});
@@ -86,9 +88,13 @@ function onMessage(event) {
 }
 
 function connect(serviceBaseUrl, token) {
-	serviceBaseUrl = serviceBaseUrl;
-	eventSource = new EventSource(serviceBaseUrl + '/public/user/notify/' + token);
-	eventSource.onmessage = onMessage;
+	if(activeToken !== token) {
+		serviceBaseUrl = serviceBaseUrl;
+		disconnect();
+		eventSource = new EventSource(serviceBaseUrl + '/public/user/notify/' + token);
+		activeToken = token;
+		eventSource.onmessage = onMessage;
+	}
 }
 
 function disconnect() {

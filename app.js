@@ -46,7 +46,7 @@ angular.module('bichoApp', [
     })
     
     .value('serviceBaseUrl', function() {
-        return sessionStorage.getItem('baseUrl') || 'https://bichoperdido-gschmoeller.rhcloud.com';
+        return sessionStorage.getItem('baseUrl') || 'https://bichoperdido-francisfontoura.rhcloud.com';
     }())
     
     .config(function($urlRouterProvider, $stateProvider, uiGmapGoogleMapApiProvider, $httpProvider, LightboxProvider) {

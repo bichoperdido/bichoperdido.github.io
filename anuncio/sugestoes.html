@@ -12,7 +12,7 @@
 					<h3>{{a.nome||'Sem nome'}}</h3>
 					<small>({{(a.semelhanca * 100)|number:2}}%)</small>
 					<p>{{a.natureza|capitalize}} em {{a.datahora|date:'shortDate'}} às {{a.datahora|date:'shortTime'}} em {{a.endereco}}.</p>
-					<button type="button" class="btn btn-primary btn-block" ui-sref="detalhesAnuncio({id: a.id})"><i class="fa fa-eye"></i> Visualizar</button>
+					<button type="button" class="btn btn-primary btn-block" ui-sref="detalhesAnuncio({id: a.id})" ng-click="$close()"><i class="fa fa-eye"></i> Visualizar</button>
 				</div>
 			</div>
 		</div>

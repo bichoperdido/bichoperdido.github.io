@@ -67,12 +67,12 @@
                 <div ng-repeat="c in static.cores" class="form-control" style="background-color: {{c}}"></div>
             </div>
         
-            <div class="form-group" ng-if="!isEditing()">
+            <div class="form-group" ng-if="true || !isEditing()">
                 <label>Raça</label>
                 <p class="form-control-static">{{static.raca}}</p>
             </div>
             
-            <div class="form-group" ng-class="{'has-error': hasError(anuncioForm.raca)}" ng-if="isEditing()">
+            <div class="form-group" ng-class="{'has-error': hasError(anuncioForm.raca)}" ng-if="false && isEditing()">
                 <label>Raça</label>
                 <input class="form-control" name="raca" ng-model="_raca.model" required
                     uib-typeahead="breed as breed.nome for breed in breeds|filter:{especie: dto.especie.toUpperCase(), nome: $viewValue}"
@@ -127,7 +127,7 @@
         <textarea class="form-control" ng-model="dto.detalhes"></textarea>
     </div>
 
-    <div class="form-group" ng-if="!isEditing() && static.peculiaridades.length">
+    <div class="form-group" ng-if="true || !isEditing() && static.peculiaridades.length">
         <label>Peculiaridades</label>
         <table class="table">
             <thead>
@@ -145,7 +145,7 @@
         </table>
     </div>
     
-    <div ng-if="isEditing()">
+    <div ng-if="false && isEditing()">
         <div class="form-group">
             <label>Peculiaridades</label>
             <div class="form-group" ng-repeat="p in dto.peculiaridades" ng-class="{'has-error': anuncioForm['oQue' + $index].$invalid || anuncioForm['onde' + $index].$invalid}">
@@ -204,9 +204,12 @@
             <uib-carousel interval="3000">
                 <uib-slide ng-repeat="s in semelhantes">
                     <img ng-src="{{serviceBaseUrl + s.miniatura}}" style="margin: auto" onerror="this.src='bp.png'">
-                    <div class="carousel-caption">
-                        <a ui-sref="detalhesAnuncio({id: s.id})">{{s.nome||'Sem nome'}}</a>
-                    </div>
+                    <a ui-sref="detalhesAnuncio({id: s.id})">
+                        <div class="carousel-caption" astyle="text-shadow: 3px 3px 0 rgba(0,0,0)">
+        					<h4>{{s.nome||'Sem nome'}}</h4>
+        					<p>{{(s.semelhanca * 100)|number:2}}% semelhante</p>
+                        </div>
+                    </a>
                 </uib-slide>
             </uib-carousel>
         

@@ -84,7 +84,7 @@
 		<ui-gmap-google-map center="map.center" zoom="map.zoom" options="map.options" pan="true" events="map.events">
 			<ui-gmap-search-box template="search.template" events="search.events" parentdiv="'searchbox'"></ui-gmap-search-box>
 			<!--ui-gmap-marker idkey="'current'" coords="map.current"></ui-gmap-marker-->
-			<ui-gmap-markers models="markers" coords="'self'" icon="'icon'" type="'cluster'" click="click">
+			<ui-gmap-markers models="markers" coords="'self'" icon="'icon'" type="null" click="click">
 				<ui-gmap-windows show="show">
 					<div ng-non-bindable class="gm-style gm-style-iw gm-iw gm-sm">
 						<div class="gm-title">{{nome ? nome : 'Nome desconhecido'}}</div>

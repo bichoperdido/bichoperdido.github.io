@@ -44,7 +44,7 @@ table.contato td {
 		{{anuncio.natureza|natureza:anuncio.genero}},
 		da raça <b>{{anuncio.raca}}</b>,
 		cor<span ng-if="anuncio.cores.length > 1">es</span> <b ng-bind-html="anuncio.cores|cores|lowercase"></b>,
-		<span ng-if="anuncio.especie='cachorro'">porte <b>{{anuncio.porte|porte}}</b></span>,
+		<span ng-if="anuncio.especie=='cachorro'">porte <b>{{anuncio.porte|porte}}, </b></span>
 		pelagem <b>{{anuncio.pelagem}}</b>.
 		<span ng-if="anuncio.peculiaridades.length">Possui <b>{{anuncio.peculiaridades|peculiaridades|lowercase}}</b>.</span>
 	</p>
@@ -61,7 +61,10 @@ table.contato td {
 		<input type="checkbox" ng-model="recompensa" class="hidden-print">
 		<b>Gratifica-se com recompensa</b>.
 	</p>
+	
+	<div class="row">
 
+	<div class="col-xs-9">
 	<table class="contato table table-condensed">
 		<tbody>
 			<tr>
@@ -82,6 +85,11 @@ table.contato td {
 			</tr>
 		</tbody>
 	</table>
+	</div>
+	
+	<div id="qrcode" class="col-xs-3"></div>
+	
+	</div>
 
 	<button type="button" class="btn btn-primary hidden-print" ng-click="imprimir()"><i class="fa fa-print"></i> Imprimir</button>
 </center>

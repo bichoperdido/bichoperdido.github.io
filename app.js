@@ -41,12 +41,13 @@ angular.module('bichoApp', [
         0: 'Servidor não responde. Por favor, tente mais tarde.',
         1: 'E-mail e/ou senha inválidos.',
         2: 'Sessão inválida ou expirada. Por favor, faça login novamente.',
+        3: 'E-mail já cadastrado anteriormente.',
         // 98: Mensagem de erro enviada pelo servidor
         99: 'Erro desconhecido.'
     })
     
     .value('serviceBaseUrl', function() {
-        return sessionStorage.getItem('baseUrl') || 'https://bichoperdido-francisfontoura.rhcloud.com';
+        return sessionStorage.getItem('baseUrl') || 'https://bichoperdido-gschmoeller.rhcloud.com';
     }())
     
     .config(function($urlRouterProvider, $stateProvider, uiGmapGoogleMapApiProvider, $httpProvider, LightboxProvider) {

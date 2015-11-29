@@ -5,7 +5,7 @@
     "Gabriel Dias Schmoeller <gabrielschmoeller@gmail.com>"
   ],
   "description": "Trabalho de Conclusão de Curso de Francis Vagner dos Anjos Fontoura e Gabriel Dias Schmoeller para obtenção do grau de Bacharel em Sistemas de Informação na PUCRS em 2015/2.",
-  "homepage": "http://bichoperdido-francisfontoura1.c9.io",
+  "homepage": "https://bichoperdido.github.io",
   "private": true,
   "ignore": [
     "**/.*",
@@ -34,7 +34,8 @@
     "angular-file-upload": "~2.1.4",
     "angular-bootstrap-lightbox": "~0.9.0",
     "ng-videosharing-embed": "~0.3.4",
-    "angular-filter": "~0.5.7"
+    "angular-filter": "~0.5.7",
+    "qrcode.js": "davidshimjs/qrcodejs"
   },
   "resolutions": {
     "angular-bootstrap": "~0.14.0"

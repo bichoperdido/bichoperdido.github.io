@@ -1,4 +1,4 @@
-/* global angular ntc */
+/* global angular ntc QRCode */
 angular.module('bichoApp.anuncio.cartaz', ['ui.router'])
 
     .config(function($stateProvider) {
@@ -29,6 +29,7 @@ angular.module('bichoApp.anuncio.cartaz', ['ui.router'])
                 return obj.capa;
             })[0].imagem;
         };
+        new QRCode(document.getElementById('qrcode'), $location.absUrl().split('/cartaz')[0]);
     })
     
     .filter('natureza', function() {

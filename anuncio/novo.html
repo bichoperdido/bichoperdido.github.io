@@ -94,7 +94,7 @@
                 <label class="btn btn-default" ng-model="dto.genero" uib-btn-radio="'femea'">Fêmea</label>
                 <label class="btn btn-default" ng-model="dto.genero" uib-btn-radio="'naosei'" ng-if="dto.natureza == 'encontrado'">Não sei</label>
             </div>
-            <p class="help-block" ng-if="generoHasError()">Escolha uma espécie.</p>
+            <p class="help-block" ng-if="generoHasError()">Informe o gênero.</p>
         </div>
         
         <div class="checkbox" ng-if="dto.natureza=='encontrado'">
@@ -147,13 +147,22 @@
 
         <div class="form-group" ng-class="{'has-error': hasError(anuncioForm.raca)}">
             <label>Raça</label>
-            <input class="form-control" name="raca" ng-model="_raca.model" required
+            <ui-select ng-model="_raca.model" on-select="dto.raca=_raca.model.id" name="raca" required>
+                <ui-select-match>
+                    <span ng-bind="$select.selected.nome"></span>
+                </ui-select-match>
+                <ui-select-choices repeat="breed in breeds|filter:{especie: dto.especie}|filter:$select.search">
+                    <span ng-bind="breed.nome"></span>
+                </ui-select-choices>
+            </ui-select>
+            <p class="help-block" ng-if="hasError(anuncioForm.raca)">Informe a raça {{nomeLabel()}}.</p>
+            <!--input class="form-control" name="raca" ng-model="_raca.model" required
                 uib-typeahead="breed as breed.nome for breed in breeds|filter:{especie: dto.especie.toUpperCase(), nome: $viewValue}"
                 typeahead-editable="false"
                 typeahead-on-select="dto.raca=_raca.model.id"
-            >
+            -->
         </div>
-        
+
         <div class="form-group" ng-class="{'has-error': !dto.porte}" ng-if="dto.especie=='cachorro'">
             <label>Porte</label>
             <div class="btn-group btn-group-justified" ng-class="{'has-error': !dto.porte}">

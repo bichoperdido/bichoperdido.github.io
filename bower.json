@@ -35,7 +35,8 @@
     "angular-bootstrap-lightbox": "~0.9.0",
     "ng-videosharing-embed": "~0.3.4",
     "angular-filter": "~0.5.7",
-    "qrcode.js": "davidshimjs/qrcodejs"
+    "qrcode.js": "davidshimjs/qrcodejs",
+    "ui-select": "angular-ui-select#~0.13.2"
   },
   "resolutions": {
     "angular-bootstrap": "~0.14.0"

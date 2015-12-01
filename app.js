@@ -7,6 +7,7 @@ angular.module('bichoApp', [
     'ui.router',
     'ui.bootstrap',
     'ui.mask',
+    'ui.select',
     'uiGmapgoogle-maps',
     'angular-loading-bar',
     'bootstrapLightbox',

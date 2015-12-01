@@ -2,6 +2,6 @@
 angular.module('bichoApp.deploy', [])
 
     .value('serviceBaseUrl', function() {
-        return sessionStorage.getItem('baseUrl') || 'https://bichoperdido-francisfontoura.rhcloud.com';
+        return localStorage.getItem('baseUrl') || 'https://bichoperdido-francisfontoura.rhcloud.com';
     }())
 ;

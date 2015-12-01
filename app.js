@@ -227,9 +227,9 @@ angular.module('bichoApp', [
         $rootScope.changeBaseUrl = function() {
             var base = prompt('Insira a URL base do serviço. Cancele para retomar o padrão.', serviceBaseUrl);
             if(base) {
-                sessionStorage.setItem('baseUrl', base);
+                localStorage.setItem('baseUrl', base);
             } else {
-                sessionStorage.removeItem('baseUrl');
+                localStorage.removeItem('baseUrl');
             }
             location.reload();
         };

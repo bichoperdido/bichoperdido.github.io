@@ -12,6 +12,7 @@ angular.module('bichoApp', [
     'angular-loading-bar',
     'bootstrapLightbox',
     'angular.filter',
+    'bichoApp.deploy',
     'bichoApp.login',
     'bichoApp.loginModal',
     'bichoApp.cadastro',
@@ -46,10 +47,6 @@ angular.module('bichoApp', [
         // 98: Mensagem de erro enviada pelo servidor
         99: 'Erro desconhecido.'
     })
-    
-    .value('serviceBaseUrl', function() {
-        return sessionStorage.getItem('baseUrl') || 'https://bichoperdido-francisfontoura.rhcloud.com';
-    }())
     
     .config(function($urlRouterProvider, $stateProvider, uiGmapGoogleMapApiProvider, $httpProvider, LightboxProvider) {
         

@@ -1,0 +1,20 @@
+<div class="modal-header">
+	<button type="button" class="close" ng-click="$close()">&times;</button>
+	<h4 class="modal-title">Seu animal pode ser...</h4>
+</div>
+<div class="modal-body">
+	<p ng-if="!sugestoes.length">Nenhum anúncio semelhante foi encontrado.</p>
+	<div class="row" ng-if="sugestoes.length">
+		<div class="col-xs-12 col-sm-6 col-md-4" ng-repeat="a in sugestoes">
+			<div class="thumbnail">
+				<img ng-src="{{serviceBaseUrl + a.miniatura}}" onerror="this.src='bp.png'">
+				<div class="caption">
+					<h3>{{a.nome||'Sem nome'}}</h3>
+					<small>({{(a.semelhanca * 100)|number:2}}%)</small>
+					<p>{{a.natureza|capitalize}} em {{a.datahora|date:'shortDate'}} às {{a.datahora|date:'shortTime'}} em {{a.endereco}}.</p>
+					<button type="button" class="btn btn-primary btn-block" ui-sref="detalhesAnuncio({id: a.id})" ng-click="$close()"><i class="fa fa-eye"></i> Visualizar</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

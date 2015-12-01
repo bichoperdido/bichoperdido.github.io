@@ -1,0 +1,221 @@
+<form name="anuncioForm">
+    
+    <div class="pull-right">
+    
+    <div ng-if="!isEditing()">
+        <button type="button" class="btn btn-primary" ui-sref="cartaz({id: $stateParams.id})">Gerar cartaz</button>
+        <button type="button" class="btn btn-warning" ng-if="isMine" ng-click="edit()"><i class="fa fa-pencil-square-o"></i> Editar</button>
+    </div>
+
+    <div ng-if="isEditing()">
+        <button type="submit" class="btn btn-primary" ng-click="finish()" ng-disabled="anuncioForm.$invalid"><i class="fa fa-check-square-o"></i> Concluir edições</button>
+        <button type="button" class="btn btn-danger" ng-click="cancel()"><i class="fa fa-ban"></i> Cancelar</button>
+    </div>
+    
+    </div>
+    
+    <h1>{{static.nome||'Sem nome'}} <small>{{static.especie}} <span ng-if="static.genero != 'naosei'">{{static.genero|genero}}</span> {{static.natureza}}</small></h1>
+    
+    <div class="row">
+    
+        <div class="col-xs-12 col-md-5">
+    
+            <img ng-src="{{capa()}}" class="img-responsive" style="width: 100%" onerror="this.src='bp.png'">
+            
+            <br>
+
+            <div class="form-group">
+                <label>Galeria<span class="text-danger" ng-if="isEditing()"> (As alterações na galeria são imediatas.)</span></label>
+                <div class="row">
+                    <div ng-repeat="i in _gallery" class="col-xs-6 col-sm-4 col-md-6 col-lg-4">
+                        <div class="thumbnail" ng-style="{'background-color': i.removed ? 'red' : 'auto'}">
+                            <a ng-click="openLightbox($index)" href>
+                                <img ng-src="{{i.miniatura}}">
+                            </a>
+                            <div class="caption" ng-if="isEditing()">
+                                <div class="btn-group-vertical btn-block">
+                                    <button type="button" class="btn btn-primary" ng-disabled="i.capa" ng-if="i.type != 'video'" ng-click="setCapa(i.id)">Tornar capa</button>
+                                    <button type="button" class="btn btn-danger" ng-disabled="i.capa || i.removed" ng-click="remove(i)">Apagar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div ng-if="isEditing()">
+                <span class="btn btn-default btn-file">Enviar nova imagem...<input type="file" accept="image/*" nv-file-select uploader="uploader"></span>
+                <button type="button" class="btn btn-default" ng-click="video()">Associar vídeo online...</button>
+            </div>
+    
+        </div>
+    
+        <div class="col-xs-12 col-md-7">
+
+            <div class="form-group">
+                <label>Data e hora da ocorrência</label>
+                <p class="form-control-static">{{static.datahora|date:'medium'}}</p>
+            </div>
+        
+            <div class="form-group">
+                <label>Local da ocorrência</label>
+                <p class="form-control-static">{{static.local.endereco}}</p>
+            </div>
+        
+            <div class="form-group">
+                <label>Cores em ordem de predominância</label>
+                <div ng-repeat="c in static.cores" class="form-control" style="background-color: {{c}}"></div>
+            </div>
+        
+            <div class="form-group" ng-if="true || !isEditing()">
+                <label>Raça</label>
+                <p class="form-control-static">{{static.raca}}</p>
+            </div>
+            
+            <div class="form-group" ng-class="{'has-error': hasError(anuncioForm.raca)}" ng-if="false && isEditing()">
+                <label>Raça</label>
+                <input class="form-control" name="raca" ng-model="_raca.model" required
+                    uib-typeahead="breed as breed.nome for breed in breeds|filter:{especie: dto.especie.toUpperCase(), nome: $viewValue}"
+                    typeahead-editable="false"
+                    typeahead-on-select="dto.raca=_raca.model.id"
+                >
+            </div>
+        
+            <div class="form-group">
+                <label>Porte</label>
+                <p class="form-control-static">{{static.porte|porte|capitalize}}</p>
+            </div>
+        
+            <div class="form-group">
+                <label>Pelagem</label>
+                <p class="form-control-static">{{static.pelagem|capitalize}}</p>
+            </div>
+        
+        	<div class="form-group">
+        		<label>Contato</label>
+            	<table class="table table-condensed">
+            		<tbody>
+            			<tr>
+            				<td><i class="fa fa-user"></i></td>
+            				<td>{{static.usuario|uppercase}}</td>
+            			</tr>
+            			<tr>
+            				<td><i class="fa fa-envelope-o"></i></td>
+            				<td><a href="mailto:{{static.email}}">{{static.email|lowercase}}</a></td>
+            			</tr>
+            			<tr>
+            				<td><i class="fa fa-phone"></i></td>
+            				<td><a href="tel:{{static.telefone}}">{{static.telefone|tel}}</a></td>
+            			</tr>
+            		</tbody>
+            	</table>
+        	</div>
+
+        </div>
+
+    </div>
+    
+    <br>
+    
+    <div class="form-group" ng-if="!isEditing() && static.detalhes">
+        <label>Detalhes da ocorrência</label>
+        <p class="form-control-static">{{static.detalhes}}</p>
+    </div>
+    
+    <div class="form-group" ng-if="isEditing()">
+        <label>Detalhes da ocorrência ("perdeu-se na rua", "fugiu de casa", etc.)</label>
+        <textarea class="form-control" ng-model="dto.detalhes"></textarea>
+    </div>
+
+    <div class="form-group" ng-if="true || !isEditing() && static.peculiaridades.length">
+        <label>Peculiaridades</label>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>O quê?</th>
+                    <th>Onde?</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="p in static.peculiaridades">
+                    <td>{{p.oQue}}</td>
+                    <td>{{p.onde}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <div ng-if="false && isEditing()">
+        <div class="form-group">
+            <label>Peculiaridades</label>
+            <div class="form-group" ng-repeat="p in dto.peculiaridades" ng-class="{'has-error': anuncioForm['oQue' + $index].$invalid || anuncioForm['onde' + $index].$invalid}">
+                <label>{{$index+1}}ª peculiaridade <a href ng-click="_peculiaridades.remove($index)">Remover</a></label>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <select class="form-control" ng-model="p.oQue" ng-options="id as label for (id, label) in _peculiaridades.oQues" required name="oQue{{$index}}">
+                            <option value disabled ng-selected="!p.oQue">O quê?</option>
+                        </select>
+                    </div>
+                    <div class="col-xs-6">
+                        <select class="form-control" ng-model="p.onde" ng-options="id as label for (id, label) in _peculiaridades.ondes" required name="onde{{$index}}">
+                            <option value disabled ng-selected="!p.onde">Onde?</option>
+                        </select>
+                    </div>
+                </div>
+                <p class="help-block" ng-if="anuncioForm['oQue' + $index].$invalid || anuncioForm['onde' + $index].$invalid">Defina a peculiaridade (o que e onde) ou remova-a.</p>
+            </div>
+        </div>
+        <button type="button" class="btn btn-link btn-block" ng-click="_peculiaridades.add()">Mais peculiaridades...</button>
+    </div>
+
+    <div class="form-group" ng-if="!isEditing() && static.outras">
+        <label>Mais informações</label>
+        <p class="form-control-static">{{static.outras}}</p>
+    </div>
+
+    <div class="form-group" ng-if="isEditing()">
+        <label>Mais informações (comportamentos, adereços, etc.)</label>
+        <textarea class="form-control" ng-model="dto.outras"></textarea>
+    </div>
+    
+    <div ng-if="isEditing()">
+        <button type="submit" class="btn btn-primary" ng-click="finish()" ng-disabled="anuncioForm.$invalid"><i class="fa fa-check-square-o"></i> Concluir edições</button>
+        <button type="button" class="btn btn-danger" ng-click="cancel()"><i class="fa fa-ban"></i> Cancelar</button>
+    </div>
+
+    <br>
+
+    <div class="row" ng-if="!isEditing()">
+
+        <div class="col-md-6">
+            
+            <label>Mapa da ocorrência</label>
+        
+            <ui-gmap-google-map center="map.center" zoom="map.zoom" options="map.options" pan="true">
+                <ui-gmap-marker idKey="'local'" coords="static.local.coordenadas"></ui-gmap-marker>
+            </ui-gmap-google-map>
+        
+        </div>
+        
+        <div class="col-md-6" style="height: 300px" ng-if="semelhantes.length">
+            
+            <label>Anúncios semelhantes</label>
+    
+            <uib-carousel interval="3000">
+                <uib-slide ng-repeat="s in semelhantes">
+                    <img ng-src="{{serviceBaseUrl + s.miniatura}}" style="margin: auto" onerror="this.src='bp.png'">
+                    <a ui-sref="detalhesAnuncio({id: s.id})">
+                        <div class="carousel-caption" astyle="text-shadow: 3px 3px 0 rgba(0,0,0)">
+        					<h4>{{s.nome||'Sem nome'}}</h4>
+        					<p>{{(s.semelhanca * 100)|number:2}}% semelhante</p>
+                        </div>
+                    </a>
+                </uib-slide>
+            </uib-carousel>
+        
+        </div>
+    
+    </div>
+
+</form>
+

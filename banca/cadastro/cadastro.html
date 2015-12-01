@@ -1,0 +1,40 @@
+<form name="cadastroForm">
+    <div class="form-group" ng-class="{'has-error': hasError(cadastroForm.nome)}">
+        <label>Nome</label>
+        <input class="form-control" name="nome" ng-model="dto.nome" required>
+        <p class="help-block" ng-if="hasError(cadastroForm.nome)" ng-messages="cadastroForm.nome.$error">
+            <span ng-message="required">Campo deve ser preenchido.</span>
+        </p>
+    </div>
+    <div class="form-group" ng-class="{'has-error': hasError(cadastroForm.tel)}">
+        <label>Telefone para contato</label>
+        <input class="form-control" type="tel" name="tel" ng-model="dto.telefone" ui-mask="(99) 9999-9999?9">
+        <p class="help-block" ng-if="hasError(cadastroForm.tel)" ng-messages="cadastroForm.tel.$error">
+            <span ng-message="mask">Informe no mínimo 8 algarismos mais o DDD.</span>
+        </p>
+    </div>
+    <div class="form-group" ng-class="{'has-error': hasError(cadastroForm.email)}">
+        <label>Endereço de <i>e-mail</i></label>
+        <input class="form-control" type="email" name="email" ng-model="dto.email" required>
+        <p class="help-block" ng-if="hasError(cadastroForm.email)" ng-messages="cadastroForm.email.$error">
+            <span ng-message="required">Campo deve ser preenchido.</span>
+            <span ng-message="email">Informe um endereço de <i>E-mail</i> válido.</span>
+        </p>
+    </div>
+    <div class="form-group" ng-class="{'has-error': hasError(cadastroForm.senha)}">
+        <label>Senha</label>
+        <input class="form-control" type="password" name="senha" ng-model="dto.senha" required>
+        <p class="help-block" ng-if="hasError(cadastroForm.senha)" ng-messages="cadastroForm.senha.$error">
+            <span ng-message="required">Campo deve ser preenchido.</span>
+        </p>
+    </div>
+    <div class="form-group" ng-class="{'has-error': hasError(cadastroForm.confirm)}">
+        <label>Confirmação de senha</label>
+        <input class="form-control" type="password" name="confirm" ng-model="confirm" ng-pattern="dto.senha" required>
+        <p class="help-block" ng-if="hasError(cadastroForm.confirm)" ng-messages="cadastroForm.confirm.$error">
+            <span ng-message="required">Campo deve ser preenchido.</span>
+            <span ng-message="pattern">Não confere com a senha anterior.</span>
+        </p>
+    </div>
+    <button class="btn btn-primary btn-block" ng-disabled="cadastroForm.$invalid||_loading" ng-click="register()" ng-bind-html="loadingLabel('Cadastrar-se')"></button>
+</form>

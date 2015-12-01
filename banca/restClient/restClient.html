@@ -1,0 +1,43 @@
+<form name="restForm" novalidate>
+    <div class="form-group">
+        <label>URL (<a href ng-click="example()">exemplo</a>)</label>
+        <input class="form-control" type="url" ng-model="config.url" required>
+    </div>
+    <div class="form-group">
+        <label>Método HTTP</label>
+        <select class="form-control" ng-model="config.method" ng-options="method for method in methods" required></select>
+    </div>
+    <div class="form-group">
+        <label>Tipo de conteúdo</label>
+        <select class="form-control" ng-model="config.headers['Content-type']" ng-options="type for type in types"></select>
+    </div>
+    <div class="form-group" ng-if="config.headers['Content-type']=='application/x-www-form-urlencoded'">
+        <label>Parâmetros</label>
+        <table class="table" ng-if="config.params">
+            <thead><th>Chave</th><th>Valor</th></thead>
+            <tbody><tr ng-repeat="(key, value) in config.params"><td>{{key}}</td><td>{{value}}</td></tr></tbody>
+        </table>
+        <div class="form-inline">
+            <input class="form-control" ng-model="$parent._param.key" placeholder="chave">
+            <input class="form-control" ng-model="$parent._param.value" placeholder="valor">
+            <button class="btn btn-primary" ng-click="paramAdd()">&plus;</button>
+        </div>
+    </div>
+    <div class="form-group" ng-if="config.headers['Content-type']=='application/json'">
+        <label>Corpo da requisição (JSON)</label>
+        <textarea class="form-control" ng-model="$parent._data"></textarea>
+    </div>
+    <div class="checkbox">
+        <label>
+            <input type="checkbox" ng-model="config.withCredentials">Manter contexto HTTP?
+        </label>
+    </div>
+    <div class="btn-group btn-group-justified">
+        <div class="btn-group">
+            <button class="btn btn-primary" ng-click="sendRequest()" ng-disabled="restForm.$invalid || _loading" ng-bind-html="loadingLabel('Enviar requisição')"></button>
+        </div>
+        <div class="btn-group">
+            <button class="btn btn-default" type="button" ng-click="resetForm()">Limpar formulário</button>
+        </div>
+    </div>
+</form>

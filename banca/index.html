@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="pt-BR" ng-app="bichoApp">
+    <head>
+        <meta charset="UTF-8">
+        <title>Bicho Perdido</title>
+        <!-- iOS Web App -->
+        <meta name="viewport" content="user-scalable=no,width=device-width">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-title" content="Bicho Perdido">
+        <link rel="apple-touch-icon" sizes="57x57" href="assets/apple-icon-57x57.png">
+        <link rel="apple-touch-icon" sizes="60x60" href="assets/apple-icon-60x60.png">
+        <link rel="apple-touch-icon" sizes="72x72" href="assets/apple-icon-72x72.png">
+        <link rel="apple-touch-icon" sizes="76x76" href="assets/apple-icon-76x76.png">
+        <link rel="apple-touch-icon" sizes="114x114" href="assets/apple-icon-114x114.png">
+        <link rel="apple-touch-icon" sizes="120x120" href="assets/apple-icon-120x120.png">
+        <link rel="apple-touch-icon" sizes="144x144" href="assets/apple-icon-144x144.png">
+        <link rel="apple-touch-icon" sizes="152x152" href="assets/apple-icon-152x152.png">
+        <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-icon-180x180.png">
+        <!-- Other OSes icons -->
+        <link rel="icon" type="image/png" sizes="192x192"  href="assets/android-icon-192x192.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="96x96" href="assets/favicon-96x96.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+        <link rel="manifest" href="/manifest.json">
+        <meta name="msapplication-TileColor" content="#ffffff">
+        <meta name="msapplication-TileImage" content="assets/ms-icon-144x144.png">
+        <meta name="theme-color" content="#ffffff">
+        <!-- UI kits -->
+        <link rel="stylesheet" href="bower_components/fontawesome/css/font-awesome.min.css">
+        <link rel="stylesheet" href="bower_components/bootstrap-css/css/bootstrap.min.css">
+        <link rel="stylesheet" href="bower_components/bootstrap-css/css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="bower_components/angular-loading-bar/build/loading-bar.min.css">
+        <link rel="stylesheet" href="bower_components/ng-tags-input/ng-tags-input.min.css">
+        <link rel="stylesheet" href="bower_components/ng-tags-input/ng-tags-input.bootstrap.min.css">
+        <link rel="stylesheet" href="bower_components/angular-bootstrap-lightbox/dist/angular-bootstrap-lightbox.min.css">
+        <link rel="stylesheet" href="bower_components/ui-select/dist/select.min.css">
+        <!-- Third party JavaScript libs -->
+        <script src="bower_components/fastclick/lib/fastclick.js"></script>
+        <script src="bower_components/lodash/lodash.min.js"></script>
+        <script src="bower_components/exif-js/exif.js"></script>
+        <script src="ntc.js"></script>
+        <script src="bower_components/qrcode.js/qrcode.js"></script>
+        <!-- AngularJS framework & additional modules -->
+        <script src="bower_components/angular/angular.min.js"></script>
+        <script src="bower_components/angular-animate/angular-animate.min.js"></script>
+        <script src="bower_components/angular-messages/angular-messages.min.js"></script>
+        <script src="bower_components/angular-resource/angular-resource.min.js"></script>
+        <script src="bower_components/angular-sanitize/angular-sanitize.min.js"></script>
+        <script src="bower_components/ngLocale/angular-locale_pt-br.js"></script>
+        <!-- Angular third party modules -->
+        <script src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+        <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+        <script src="bower_components/angular-simple-logger/dist/index.js"></script>
+        <script src="bower_components/angular-google-maps/dist/angular-google-maps.min.js"></script>
+        <script src="bower_components/angular-ui-mask/dist/mask.min.js"></script>
+        <script src="bower_components/angular-loading-bar/build/loading-bar.min.js"></script>
+        <script src="bower_components/ng-tags-input/ng-tags-input.min.js"></script>
+        <script src="bower_components/angular-file-upload/dist/angular-file-upload.min.js"></script>
+        <script src="bower_components/ng-videosharing-embed/build/ng-videosharing-embed.min.js"></script>
+        <script src="bower_components/angular-bootstrap-lightbox/dist/angular-bootstrap-lightbox.min.js"></script>
+        <script src="bower_components/angular-filter/dist/angular-filter.min.js"></script>
+        <script src="bower_components/ui-select/dist/select.min.js"></script>
+        <style>
+            body {
+                padding-top: 70px;
+                padding-bottom: 20px;
+            }
+            .btn-group.has-error {
+                border: solid 1px #a94442;
+                border-radius: 4px;
+            }
+            .angular-google-map-container {
+                height: 450px;
+            }
+            .img-rounded {
+                padding: 5px;
+            }
+            .img-rounded.is-selected {
+                border: solid 5px blue;
+                padding: 0;
+            }
+            .btn-group.color-buttons {
+                display: table;
+            }
+            .btn-file {
+                position: relative;
+                overflow: hidden;
+            }
+            .btn-file input[type=file] {
+                position: absolute;
+                top: 0;
+                right: 0;
+                min-width: 100%;
+                min-height: 100%;
+                font-size: 100px;
+                text-align: right;
+                filter: alpha(opacity=0);
+                opacity: 0;
+                outline: none;
+                background: white;
+                cursor: inherit;
+                display: block;
+            }
+        </style>
+    </head>
+    <body ng-controller="mainCtrl">
+        <div class="navbar navbar-default navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" ng-click="toggleCollapse()" class="navbar-toggle">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" ui-sref="home"><i class="fa fa-paw"></i> Bicho Perdido <i class="fa fa-search"></i></a>
+                </div>
+                <div class="navbar-collapse" collapse="navbarCollapsed">
+                    <ul class="nav navbar-nav">
+                        <li ng-class="{'active': isActive('/busca')}"><a ui-sref="busca">Busca</a></li>
+                        <li ng-class="{'active': isActive('/cadastro')}"><a ui-sref="cadastro">Cadastro</a></li>
+                        <li uib-dropdown>
+                            <a href uib-dropdown-toggle>Anúncios</a>
+                            <ul class="dropdown-menu">
+                                <li ng-class="{'active': isActive('/anuncio/novo')}"><a ui-sref="novoAnuncio">Novo anúncio</a></li>
+                                <li ng-class="{'active': isActive('/anuncio/meus')}"><a ui-sref="meusAnuncios">Meus anúncios</a></li>
+                            </ul>
+                        </li>
+                        <li ng-class="{'active': isActive('/protetor')}"><a ui-sref="protetor" uib-tooltip="Monitorar uma área por novas ocorrências." tooltip-placement="bottom">Protetor</a></li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li ng-class="{'active': isActive('/login')}" ng-if="!currentUser"><a href ng-click="login()">Identificar-se</a></li>
+                        <li uib-dropdown ng-if="currentUser">
+                            <a href uib-dropdown-toggle><i class="fa fa-user"></i> {{currentUser}}</a>
+                            <ul class="dropdown-menu">
+                                <li><a href ng-click="logout()">Sair</a></li>
+                            </ul>
+                        </li>
+                        <li uib-dropdown>
+                            <a href uib-dropdown-toggle><i class="fa fa-cog"></i>{{}}</a>
+                            <ul class="dropdown-menu">
+                                <li ng-class="{'active': isActive('/rest')}"><a ui-sref="rest">Cliente REST</a></li>
+                                <li><a href ng-click="changeBaseUrl()">Mudar URL</a></li>
+                                <li ng-class="{'active': isActive('/notify')}"><a ui-sref="notify">Notificações</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <uib-alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</uib-alert>
+            <ui-view></ui-view>
+            <noscript>
+                <div class="well">O JavaScript precisa estar habilitado.</div>
+            </noscript>
+        </div>
+        <script src="app.js"></script>
+        <script src="deploy.js"></script>
+        <script src="login/login.js"></script>
+        <script src="login/modal.js"></script>
+        <script src="cadastro/cadastro.js"></script>
+        <script src="anuncio/novo.js"></script>
+        <script src="anuncio/meus.js"></script>
+        <script src="anuncio/sugestoes.js"></script>
+        <script src="anuncio/detalhes.js"></script>
+        <script src="anuncio/cartaz.js"></script>
+        <script src="busca/busca.js"></script>
+        <script src="protetor/protetor.js"></script>
+        <script src="restClient/restClient.js"></script>
+        <script src="notificacao/notificacao.js"></script>
+    </body>
+</html>

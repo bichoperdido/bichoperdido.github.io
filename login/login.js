@@ -23,11 +23,6 @@ angular.module('bichoApp.login', ['ui.router'])
     
     .controller('loginCtrl', function($rootScope, $scope, LoginService, $http, serviceBaseUrl, $state) {
         
-        $scope.dto = {
-            email: 'gabriel@bp',
-            senha: 'boobs'
-        };
-        
         $scope.hasError = function(field) {
             return field.$dirty && field.$invalid;
         };
